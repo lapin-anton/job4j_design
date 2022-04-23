@@ -9,5 +9,5 @@
 - Collections Advance
 - IO Streams
 - SQL, JDBC
-- Carbage Collection
+- Garbage Collection
 - OOD
