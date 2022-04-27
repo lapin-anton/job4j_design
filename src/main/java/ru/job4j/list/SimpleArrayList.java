@@ -68,14 +68,14 @@ public class SimpleArrayList<T> implements List<T> {
 
             @Override
             public boolean hasNext() {
+                if (savedModCount != modCount) {
+                    throw new ConcurrentModificationException();
+                }
                 return index < size;
             }
 
             @Override
             public T next() {
-                if (savedModCount != modCount) {
-                    throw new ConcurrentModificationException();
-                }
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
