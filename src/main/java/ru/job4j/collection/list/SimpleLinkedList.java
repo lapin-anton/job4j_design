@@ -29,16 +29,11 @@ public class SimpleLinkedList<E> implements List<E> {
     @Override
     public E get(int index) {
         Objects.checkIndex(index, size);
-        Iterator<E> it = iterator();
-        E value = null;
-        if (index == 0) {
-            value = first.getItem();
-        } else {
-            for (int i = 0; i <= index; i++) {
-                value = it.next();
-            }
+        Node<E> current = first;
+        for (int i = 1; i <= index; i++) {
+            current = current.getNext();
         }
-        return value;
+        return current.getItem();
     }
 
     @Override
@@ -47,34 +42,29 @@ public class SimpleLinkedList<E> implements List<E> {
 
             private final int expectedModCount = modCount;
             private Node<E> currentNode;
-            private int iteration;
 
             @Override
             public boolean hasNext() {
-                boolean rsl;
-                if (currentNode == null && iteration == 0) {
-                    rsl = first != null;
-                } else {
-                    rsl = currentNode.getNext() != null;
+                if (expectedModCount != modCount) {
+                    throw new ConcurrentModificationException();
                 }
-                return rsl;
+                return currentNode == null ? first != null : currentNode.getNext() != null;
             }
 
             @Override
             public E next() {
-                if (expectedModCount != modCount) {
-                    throw new ConcurrentModificationException();
-                }
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                if (iteration == 0) {
+                E value;
+                if (currentNode == null) {
                     currentNode = first;
+                    value = currentNode.getItem();
                 } else {
+                    value = currentNode.getNext().getItem();
                     currentNode = currentNode.getNext();
                 }
-                iteration++;
-                return currentNode.getItem();
+                return value;
             }
         };
     }
