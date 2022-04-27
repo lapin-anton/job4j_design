@@ -30,10 +30,12 @@ public class SimpleArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        Objects.checkIndex(index, size--);
+        Objects.checkIndex(index, size);
         modCount++;
+        size--;
         T deletedValue = container[index];
         System.arraycopy(container, index + 1, container, index, size - index);
+        container[size] = null;
         return deletedValue;
     }
 
@@ -49,6 +51,9 @@ public class SimpleArrayList<T> implements List<T> {
     }
 
     private void grow() {
+        if (container.length == 0) {
+            container = Arrays.copyOf(container, 10);
+        }
         if (size == container.length) {
             container = Arrays.copyOf(container, container.length * 2);
         }
@@ -63,7 +68,7 @@ public class SimpleArrayList<T> implements List<T> {
 
             @Override
             public boolean hasNext() {
-                return index >= 0 && index < size;
+                return index < size;
             }
 
             @Override
