@@ -7,13 +7,13 @@ public class SimpleQueue<T> {
     private final SimpleStack<T> out = new SimpleStack<>();
 
     public T poll() {
-        copyElements(in, out);
         return out.pop();
     }
 
     public void push(T value) {
         copyElements(out, in);
         in.push(value);
+        copyElements(in, out);
     }
 
     private void copyElements(SimpleStack<T> src, SimpleStack<T> target) {
