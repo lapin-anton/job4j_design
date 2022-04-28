@@ -48,10 +48,7 @@ public class SimpleLinkedList<E> implements List<E> {
                 if (expectedModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
-                return currentNode != null
-                        && (currentNode.equals(first)
-                        || currentNode.getNext() != null
-                        || currentNode.equals(last));
+                return currentNode != null;
             }
 
             @Override
