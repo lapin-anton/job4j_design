@@ -1,5 +1,7 @@
 package ru.job4j.map;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 public class User {
@@ -13,9 +15,16 @@ public class User {
         this.birthday = birthday;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, children, birthday);
+    }
+
     public static void main(String[] args) {
-        User userOne = new User("one", 0, new GregorianCalendar(2000, 1, 1));
-        User userTwo = new User("one", 0, new GregorianCalendar(2000, 1, 1));
+        Calendar date = GregorianCalendar.from(
+                ZonedDateTime.of(2000, 1, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
+        User userOne = new User("one", 0, date);
+        User userTwo = new User("one", 0, date);
         Map<User, Object> map = new HashMap<>();
         map.put(userOne, new Object());
         map.put(userTwo, new Object());
