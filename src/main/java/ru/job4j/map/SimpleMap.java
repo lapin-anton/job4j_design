@@ -14,12 +14,10 @@ public class SimpleMap<K, V> implements Map<K, V> {
 
     private int modCount = 0;
 
-    private MapEntry[] table = new MapEntry[capacity];
+    private MapEntry<K, V>[] table = new MapEntry[capacity];
 
     @Override
     public boolean put(K key, V value) {
-        count++;
-        modCount++;
         if (Math.abs(capacity * LOAD_FACTOR - count) < 0.1) {
             expand();
         }
@@ -28,6 +26,8 @@ public class SimpleMap<K, V> implements Map<K, V> {
         boolean rsl = table[index] == null;
         if (rsl) {
             table[index] = new MapEntry<>(key, value);
+            count++;
+            modCount++;
         }
         return rsl;
     }
@@ -43,7 +43,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
 
     private void expand() {
         MapEntry[] old = Arrays.copyOf(table, capacity);
-        capacity *= 1.5f;
+        capacity *= 2;
         table = new MapEntry[capacity];
         for (MapEntry el: old) {
             if (el != null) {
@@ -59,8 +59,8 @@ public class SimpleMap<K, V> implements Map<K, V> {
         V rsl = null;
         if (key != null) {
             int index = indexFor(hash(key.hashCode()));
-            if (table[index] != null) {
-                rsl = (V) table[index].value;
+            if (table[index] != null && key.equals(table[index].key)) {
+                rsl = table[index].value;
             }
         }
         return rsl;
@@ -68,12 +68,15 @@ public class SimpleMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean remove(K key) {
-        boolean rsl = get(key) != null;
-        if (rsl) {
+        boolean rsl = false;
+        if (key != null) {
             int index = indexFor(hash(key.hashCode()));
-            table[index] = null;
-            count--;
-            modCount++;
+            if (table[index] != null && key.equals(table[index].key)) {
+                table[index] = null;
+                rsl = true;
+                count--;
+                modCount++;
+            }
         }
         return rsl;
     }
@@ -106,7 +109,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                return (K) table[index++].key;
+                return table[index++].key;
             }
         };
     }
