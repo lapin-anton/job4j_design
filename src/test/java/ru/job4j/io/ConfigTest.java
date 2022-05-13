@@ -30,30 +30,25 @@ public class ConfigTest {
         assertThat(config.value("hibernate.connection.url"), is("jdbc:postgresql://127.0.0.1:5432/trackstudio"));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void whenPairWithMissingKey() {
         String path = "./data/pair_with_missing_key.properties";
         Config config = new Config(path);
         config.load();
-        assertNull(config.value("hibernate.dialect"));
-        assertThat(config.value("hibernate.connection.url"), is("jdbc:postgresql://127.0.0.1:5432/trackstudio"));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void whenPairWithMissingValue() {
         String path = "./data/pair_with_missing_value.properties";
         Config config = new Config(path);
         config.load();
-        assertNull(config.value("hibernate.dialect"));
-        assertThat(config.value("hibernate.connection.url"), is("jdbc:postgresql://127.0.0.1:5432/trackstudio"));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void whenPairWithoutEqualSign() {
         String path = "./data/pair_without_equal_sign.properties";
         Config config = new Config(path);
         config.load();
-        assertNull(config.value("hibernate.connection.url"));
     }
 
     @Test

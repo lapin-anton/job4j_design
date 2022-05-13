@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.regex.Pattern;
 
 public class Config {
 
@@ -17,16 +18,22 @@ public class Config {
     }
 
     public void load() {
+        String regex = "^\\S+=\\S+$";
         try (BufferedReader reader = new BufferedReader(new FileReader(this.path))) {
             while (reader.ready()) {
                 String param = reader.readLine().trim();
-                if (!"".equals(param) && !param.startsWith("#") && param.contains("=")) {
+                if ("".equals(param) || param.startsWith("#")) {
+                    continue;
+                }
+                if (Pattern.matches(regex, param)) {
                     int delimPos = param.indexOf("=");
                     if (delimPos > 0 && delimPos < param.length() - 1) {
                         String name = param.substring(0, delimPos);
                         String value = param.substring(delimPos + 1);
                         values.put(name, value);
                     }
+                } else {
+                    throw new IllegalArgumentException();
                 }
             }
         } catch (IOException e) {
