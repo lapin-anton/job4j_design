@@ -22,13 +22,8 @@ public class LogFilter {
     }
 
     public static void save(List<String> log, String file) {
-        StringBuilder text = new StringBuilder();
-        for (String s: log) {
-            text.append(s);
-            text.append(System.lineSeparator());
-        }
         try (PrintWriter writer = new PrintWriter(new BufferedOutputStream(new FileOutputStream(file)))) {
-            writer.println(text);
+            log.forEach(writer::println);
         } catch (IOException e) {
             e.printStackTrace();
         }
