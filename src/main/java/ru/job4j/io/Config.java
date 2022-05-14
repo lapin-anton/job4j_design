@@ -22,19 +22,16 @@ public class Config {
         try (BufferedReader reader = new BufferedReader(new FileReader(this.path))) {
             while (reader.ready()) {
                 String param = reader.readLine().trim();
-                if ("".equals(param) || param.startsWith("#")) {
+                if (param.isEmpty() || param.startsWith("#")) {
                     continue;
                 }
-                if (Pattern.matches(regex, param)) {
-                    int delimPos = param.indexOf("=");
-                    if (delimPos > 0 && delimPos < param.length() - 1) {
-                        String name = param.substring(0, delimPos);
-                        String value = param.substring(delimPos + 1);
-                        values.put(name, value);
-                    }
-                } else {
+                if (!Pattern.matches(regex, param)) {
                     throw new IllegalArgumentException();
                 }
+                int delimPos = param.indexOf("=");
+                String name = param.substring(0, delimPos);
+                String value = param.substring(delimPos + 1);
+                values.put(name, value);
             }
         } catch (IOException e) {
             e.printStackTrace();
