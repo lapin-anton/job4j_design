@@ -22,10 +22,14 @@ public class Search {
     }
 
     private static void validateArgs(String[] args) {
+        String pathFormat = "([a-zA-Z]:)?(\\\\[a-zA-Z0-9_.-]+)+\\\\?";
         String extFormat = "^\\.\\w+$";
         if (args.length < 2) {
             throw new IllegalArgumentException("Amount of input args is less than 2. "
                     + "Usage java -jar search.jar ROOT_FOLDER FILE_EXTENSION.");
+        }
+        if (!Pattern.matches(pathFormat, args[0])) {
+            throw new IllegalArgumentException(String.format("Argument '%s' has incorrect path format", args[0]));
         }
         if (!Pattern.matches(extFormat, args[1])) {
             throw new IllegalArgumentException(String.format("Argument '%s' has incorrect file extension format", args[1]));
