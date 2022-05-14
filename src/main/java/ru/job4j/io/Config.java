@@ -18,7 +18,7 @@ public class Config {
     }
 
     public void load() {
-        String regex = "^\\S+=\\S+$";
+        String regex = "^\\S+=.+$";
         try (BufferedReader reader = new BufferedReader(new FileReader(this.path))) {
             while (reader.ready()) {
                 String param = reader.readLine().trim();
@@ -26,7 +26,7 @@ public class Config {
                     continue;
                 }
                 if (!Pattern.matches(regex, param)) {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException(String.format("The line is not valid: %s", param));
                 }
                 int delimPos = param.indexOf("=");
                 String name = param.substring(0, delimPos);
