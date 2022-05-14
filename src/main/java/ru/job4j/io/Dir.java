@@ -6,7 +6,7 @@ import java.nio.file.Files;
 
 public class Dir {
     public static void main(String[] args) throws IOException {
-        File file = new File("C:\\Users\\admin\\Desktop\\GU");
+        File file = new File("C:\\projects");
         if (!file.exists()) {
             throw new IllegalArgumentException(String.format("Not exists %s", file.getAbsolutePath()));
         }
