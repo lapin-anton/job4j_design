@@ -62,7 +62,7 @@ public class CSVReader {
     }
 
     private static void validateParam(ArgsName argsName) {
-        String pathFormat = "([a-zA-Z]:)?(\\\\[a-zA-Z0-9_.-]+)+\\\\?";
+        String pathFormat = "([a-zA-Z]:)?([\\\\\\/][a-zA-Z0-9_.-]+)+[\\\\\\/]?";
         String delimFormat = "[,;]";
         String filterFormat = "(\\w+)(,\\w+)*";
         String path = argsName.get("path");
