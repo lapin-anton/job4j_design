@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -23,12 +24,23 @@ public class Zip {
     }
 
     public static void main(String[] args) throws IOException {
+        String pathFormat = "([a-zA-Z]:)?(\\\\[a-zA-Z0-9_.-]+)+\\\\?";
+        String extFormat = "^\\.\\w+$";
         ArgsName argsName = ArgsName.of(args);
         String directory = argsName.get("d");
         String exclude = argsName.get("e");
         String output = argsName.get("o");
+        validateParam(pathFormat, "-d", directory);
+        validateParam(extFormat, "-e", exclude);
+        validateParam(pathFormat, "-o", output);
         List<Path> paths = Search.search(Paths.get(directory), p -> !p.toFile().getName().endsWith(exclude));
         Zip zip = new Zip();
         zip.packFiles(paths, new File(output));
+    }
+
+    private static void validateParam(String format, String paramName, String param) {
+        if (!Pattern.matches(format, param)) {
+            throw new IllegalArgumentException(String.format("Param %s has incorrect format", paramName));
+        }
     }
 }
