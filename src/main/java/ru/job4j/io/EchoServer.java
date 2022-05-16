@@ -9,7 +9,6 @@ import java.net.Socket;
 
 public class EchoServer {
     public static void main(String[] args) throws IOException {
-        boolean interrupt = false;
         try (ServerSocket server = new ServerSocket(9000)) {
             while (!server.isClosed()) {
                 Socket socket = server.accept();
@@ -20,13 +19,10 @@ public class EchoServer {
                     for (String str = in.readLine(); str != null && !str.isEmpty(); str = in.readLine()) {
                         System.out.println(str);
                         if (str.startsWith("GET") && str.contains("Bye")) {
-                            interrupt = true;
+                            server.close();
                         }
                     }
                     out.flush();
-                    if (interrupt) {
-                        break;
-                    }
                 }
             }
         }
