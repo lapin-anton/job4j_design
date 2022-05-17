@@ -9,6 +9,7 @@ import java.net.Socket;
 
 public class EchoServer {
     public static void main(String[] args) throws IOException {
+        String msgPrefix = "/?msg=";
         try (ServerSocket server = new ServerSocket(9000)) {
             while (!server.isClosed()) {
                 Socket socket = server.accept();
@@ -18,8 +19,15 @@ public class EchoServer {
                     out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
                     String str = in.readLine();
                     System.out.println(str);
-                    if (str != null && str.startsWith("GET") && str.contains("/?msg=Bye")) {
-                        server.close();
+                    if (str != null && str.startsWith("GET")) {
+                        String param = str.split("\\s")[1];
+                        int index = param.indexOf(msgPrefix);
+                        String msg = param.substring(index + msgPrefix.length());
+                        if (msg.equals("Exit")) {
+                            server.close();
+                        } else {
+                            out.write(msg.getBytes());
+                        }
                     }
                     out.flush();
                 }
