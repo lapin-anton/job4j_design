@@ -1,0 +1,9 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+<employee name="Vasya" isLead="true" salary="100000">
+    <profession name="manager"/>
+    <skills>
+        <skill>Can dig</skill>
+        <skill>Can't dig</skill>
+        <skill>Can make someone dig</skill>
+    </skills>
+</employee>
