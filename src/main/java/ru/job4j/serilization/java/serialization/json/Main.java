@@ -1,24 +1,17 @@
 package ru.job4j.serilization.java.serialization.json;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.util.Arrays;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Main {
     public static void main(String[] args) {
-        final Car car = new Car(400, "Volvo", true,
-                new Engine(3.5), new String[]{"Petrov", "Ivanov", "Sidorov"});
-        final Gson gson = new GsonBuilder().create();
-        System.out.println(gson.toJson(car));
-        final String carJson = "{"
-                + "\"distance\":300,"
-                + "\"brand\":\"BMV\","
-                + "\"isDizel\":false,"
-                + "\"engine\":"
-                + "{\"volume\":4.2},"
-                + "\"pilots\":[\"Shumacher\",\"Senna\"]}";
-        final Car carBmw = gson.fromJson(carJson, Car.class);
-        System.out.println(carBmw);
+        final Car car = new Car(500, "Ferrari", false, new Engine(2.5), "Shumacher", "Senna");
+        JSONObject jsonCar = new JSONObject();
+        jsonCar.put("distance", car.getDistance());
+        jsonCar.put("brand", car.getBrand());
+        jsonCar.put("isDizel", car.isDizel());
+        jsonCar.put("engine", new JSONObject(car.getEngine()));
+        jsonCar.put("pilots", new JSONArray(car.getPilots()));
+        System.out.println(jsonCar);
     }
 }

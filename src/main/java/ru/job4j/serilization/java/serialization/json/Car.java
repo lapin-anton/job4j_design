@@ -1,5 +1,7 @@
 package ru.job4j.serilization.java.serialization.json;
 
+import org.json.JSONPropertyIgnore;
+
 import java.util.Arrays;
 
 public class Car {
@@ -10,12 +12,33 @@ public class Car {
     private Engine engine;
     private String[] pilots;
 
-    public Car(int distance, String brand, boolean isDizel, Engine engine, String[] pilots) {
+    public Car(int distance, String brand, boolean isDizel, Engine engine, String... pilots) {
         this.distance = distance;
         this.brand = brand;
         this.isDizel = isDizel;
         this.engine = engine;
         this.pilots = pilots;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public boolean isDizel() {
+        return isDizel;
+    }
+
+    public Engine getEngine() {
+        return engine;
+    }
+
+    @JSONPropertyIgnore
+    public String[] getPilots() {
+        return pilots;
     }
 
     @Override
