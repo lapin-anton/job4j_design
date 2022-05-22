@@ -57,7 +57,9 @@ public class FileFinder {
     private static Predicate<Path> getPathPredicate(String n, String t) {
         Predicate<Path> searchCondition = null;
         if ("mask".equals(t)) {
-            String regex = n.replaceAll("\\*", ".*").replaceAll("\\?", "\\\\w");
+            String regex = n.replace(".", "\\.")
+                    .replaceAll("\\*", ".*")
+                    .replaceAll("\\?", "\\\\w");
             searchCondition = p -> Pattern.matches(regex, p.toFile().getName());
         }
         if ("name".equals(t)) {
