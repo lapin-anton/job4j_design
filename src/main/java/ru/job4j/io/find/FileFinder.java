@@ -57,14 +57,8 @@ public class FileFinder {
     private static Predicate<Path> getPathPredicate(String n, String t) {
         Predicate<Path> searchCondition = null;
         if ("mask".equals(t)) {
-            if (n.startsWith("*") && n.endsWith("*")
-            ) {
-                searchCondition = p -> p.toFile().getName().indexOf(n.substring(1, n.length() - 1)) > 0;
-            } else if (n.startsWith("*") && !n.endsWith("*")) {
-                searchCondition = p -> p.toFile().getName().endsWith(n.substring(1));
-            } else if (!n.startsWith("*") && n.endsWith("*")) {
-                searchCondition = p -> p.toFile().getName().startsWith(n.substring(0, n.length() - 1));
-            }
+            String regex = n.replaceAll("\\*", ".*").replaceAll("\\?", "\\\\w");
+            searchCondition = p -> Pattern.matches(regex, p.toFile().getName());
         }
         if ("name".equals(t)) {
             searchCondition = p -> p.toFile().getName().equals(n);
