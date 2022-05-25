@@ -1,8 +1,9 @@
 package ru.job4j.jdbc;
 
-import ru.job4j.io.Config;
-
-import java.sql.*;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 import java.util.StringJoiner;
 
@@ -17,35 +18,34 @@ public class TableEditor implements AutoCloseable {
     }
 
     public static void main(String[] args) throws Exception {
-        Config cfg = new Config("app.properties");
-        cfg.load();
         Properties properties = new Properties();
-        properties.put("hibernate.connection.driver_class", cfg.value("hibernate.connection.driver_class"));
-        properties.put("hibernate.connection.url", cfg.value("hibernate.connection.url"));
-        properties.put("hibernate.connection.username", cfg.value("hibernate.connection.username"));
-        properties.put("hibernate.connection.password", cfg.value("hibernate.connection.password"));
-        TableEditor tableEditor = new TableEditor(properties);
-        tableEditor.createTable("test");
-        System.out.println(getTableScheme(tableEditor.connection, "test"));
-        tableEditor.addColumn("test", "id", "serial primary key");
-        System.out.println(getTableScheme(tableEditor.connection, "test"));
-        tableEditor.addColumn("test", "name", "varchar(255)");
-        System.out.println(getTableScheme(tableEditor.connection, "test"));
-        tableEditor.addColumn("test", "age", "int");
-        System.out.println(getTableScheme(tableEditor.connection, "test"));
-        tableEditor.renameColumn("test", "name", "surname");
-        System.out.println(getTableScheme(tableEditor.connection, "test"));
-        tableEditor.dropColumn("test", "age");
-        System.out.println(getTableScheme(tableEditor.connection, "test"));
-        tableEditor.dropTable("test");
+        try (InputStream in = Thread.currentThread().getContextClassLoader()
+                .getResourceAsStream("app.properties")) {
+            properties.load(in);
+        }
+        try (TableEditor tableEditor = new TableEditor(properties)) {
+            tableEditor.createTable("test");
+            System.out.println(getTableScheme(tableEditor.connection, "test"));
+            tableEditor.addColumn("test", "id", "serial primary key");
+            System.out.println(getTableScheme(tableEditor.connection, "test"));
+            tableEditor.addColumn("test", "name", "varchar(255)");
+            System.out.println(getTableScheme(tableEditor.connection, "test"));
+            tableEditor.addColumn("test", "age", "int");
+            System.out.println(getTableScheme(tableEditor.connection, "test"));
+            tableEditor.renameColumn("test", "name", "surname");
+            System.out.println(getTableScheme(tableEditor.connection, "test"));
+            tableEditor.dropColumn("test", "age");
+            System.out.println(getTableScheme(tableEditor.connection, "test"));
+            tableEditor.dropTable("test");
+        }
     }
 
     private void initConnection() throws ClassNotFoundException, SQLException {
-        Class.forName(properties.getProperty("hibernate.connection.driver_class"));
+        Class.forName(properties.getProperty("jdbc.connection.driver_class"));
         connection = DriverManager.getConnection(
-                properties.getProperty("hibernate.connection.url"),
-                properties.getProperty("hibernate.connection.username"),
-                properties.getProperty("hibernate.connection.password"));
+                properties.getProperty("jdbc.connection.url"),
+                properties.getProperty("jdbc.connection.username"),
+                properties.getProperty("jdbc.connection.password"));
     }
 
     public void createTable(String tableName) throws Exception {
