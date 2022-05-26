@@ -26,8 +26,10 @@ public class ImportDB {
         try (BufferedReader rd = new BufferedReader(new FileReader(dump))) {
             rd.lines().forEach(l -> {
                 String[] fields =  l.substring(0, l.length() - 1).split(";");
-                if (fields.length == 2) {
+                if (fields.length == 2 && !fields[0].isEmpty() && !fields[1].isEmpty()) {
                     users.add(new User(fields[0], fields[1]));
+                } else {
+                    throw new IllegalArgumentException(String.format("Row %s has incorrect format.", l));
                 }
             });
         }
