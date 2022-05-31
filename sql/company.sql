@@ -42,10 +42,9 @@ insert into person(id, name, company_id) values
 	(19, 'T', 3),
 	(20, 'U', 4);
 
-select name from person where company_id <> 5;
-
-select p.name as person, c.name as company from company c
-	join person p on p.company_id = c.id;
+select p.name as person, c.name as company from person p
+	join company c on p.company_id = c.id
+	where c.id <> 5;
 
 select c.name as company, count(c.name) as persons from company c
 	join person p on p.company_id = c.id
