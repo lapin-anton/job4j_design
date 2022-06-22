@@ -17,9 +17,12 @@ public class MaxMin {
 
     private <T> T findPeak(List<T> list, BiPredicate<T, T> predicate) {
         T result = null;
-        for (T item: list) {
-            if (result == null || predicate.test(item, result)) {
-                result = item;
+        if (list != null && !list.isEmpty()) {
+            result = list.get(0);
+            for (T item : list) {
+                if (predicate.test(item, result)) {
+                    result = item;
+                }
             }
         }
         return result;
