@@ -25,15 +25,14 @@ public class CinemaTest {
         assertThat(ticket, is(new Ticket3D()));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     @Ignore
     public void whenNotBuyIfAlreadySold() {
         Account account = new AccountCinema();
         Cinema cinema = new Cinema3D();
         Calendar date = Calendar.getInstance();
         date.set(2020, 10, 10, 23, 00);
-        Ticket ticket = cinema.buy(account, 1, 1, date);
-        assertNull(ticket);
+        cinema.buy(account, 1, 1, date);
     }
 
     @Test
@@ -53,4 +52,25 @@ public class CinemaTest {
         List<Session> sessions = cinema.find(session -> false);
         assertThat(sessions, is(Collections.emptyList()));
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    @Ignore
+    public void whenNotBuyIfInvalidDate() {
+        Account account = new AccountCinema();
+        Cinema cinema = new Cinema3D();
+        Calendar date = Calendar.getInstance();
+        date.set(2035, 10, 10, 23, 00);
+        cinema.buy(account, 1, 1, date);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @Ignore
+    public void whenNotBuyIfInvalidPlace() {
+        Account account = new AccountCinema();
+        Cinema cinema = new Cinema3D();
+        Calendar date = Calendar.getInstance();
+        date.set(2020, 10, 10, 23, 00);
+        cinema.buy(account, -1, 666, date);
+    }
+
 }
